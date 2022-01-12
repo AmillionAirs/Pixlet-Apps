@@ -8,16 +8,24 @@ def main(config):
     Day = now.format('Monday')
 
     return render.Root(
+       delay = 500,
        child = render.Column(
           expanded=True,
           cross_align="center",
-          main_align="space_around",
                children=[
-               render.Box(width=64, height=1),    
-               render.Text(
-                    content = now.format("3:04 PM"),
-                    font = "6x13",
-                    ),
+               render.Box(width=64, height=1, color="#00a"),
+               render.Animation(  
+                    children=[  
+                         render.Text(
+                              content = now.format("3:04 PM"),
+                              font = "6x13",
+                         ),
+                         render.Text(
+                              content = now.format("3 04 PM"),
+                              font = "6x13",
+                         ),
+                    ],
+               ),     
                render.Text(
                     content = Day,
                     ),
@@ -25,6 +33,8 @@ def main(config):
                     content = now_date,
                     font = "5x8",
                     ),
+               render.Box(width=64, height=1),
+               render.Box(width=64, height=1, color="#00a"),      
                ],
           )
   )
