@@ -5,7 +5,7 @@ def main(config):
     timezone = config.get("timezone") or "America/Chicago"
     now = time.now().in_location(timezone)
     now_date = now.format('2 JAN 2006')
-    Day = now.format('Monday')
+    Day = now.format('MONDAY')
 
     return render.Root(
        delay = 500,
