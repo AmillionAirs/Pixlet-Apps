@@ -25,12 +25,24 @@ def main(config):
     return render.Root(
         child = render.Column(
             children=[
-                render.Text("Christmas"),
+                render.Row(
+                    cross_align="center",
+                    children=[
+                        render.Text("Christmas"),
+                    ],
+                ),
                 render.Box(width=64, height=1, color="#a00"),
                 render.Row(
                     children=[
+                        #32x23
                         render.Image(src=CTree),
-                        render.Text(str(XDAYS)),
+                        render.Column(
+                            children=[
+                                render.Text("Days"),
+                                render.Text("  Until"),
+                                render.Text("     222"),
+                            ],
+                        ),
                     ],
                 ),
             ],
