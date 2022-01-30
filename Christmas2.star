@@ -12,7 +12,10 @@ def main(config):
     CTree2 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAW1JREFUSEvlVjFywkAMlB4AnYt8AZ4AfVLEM3aRMkObL+QFfCEtkzKFPeMU0IcnwBdSuCMPuIzMiBEXne6MSZpcc4zFaVe70tkIynLOOURELcbPXDtzmG2Rd+u/VswEoYMWmaHglL8jYIIE1CDw/CODZt4CKRHLE1IhqkDo4H1VOIq9l7WaQytKe3YRAQZnciESKX2RzJ6T+eBDSSR5J6WTBHafrzC9eTwV2kcJztnLglD1MRWsJrdn3ZuAGAGrKQdPgQRvigryugz2WB8rki1IqV6zIjaOPwhoBxh8UjSwr/NT5VIJGbuqAn0ql56kkjgbQ7/6S8FjUyGJmj1gEfDtkEnZGl+FHUB3fU8BkH8HCVgXjtb+/qWkqUCgDM47jm5X7lAuYFytujNfmwUOld4nKJUgEpN2BvtsC7SrBGIvkeeHu05KuZZv66SRptf4WQ+4l6MvvPDp+I1grasS0Cz4UwI0ejHA34zjvyfwDalo90Q3Q145AAAAAElFTkSuQmCC")
     HPUMP1 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAR5JREFUSEvVlrENwkAMRXMSjMA0WQDRU7MEDRNQwBLULECPMg0jgBRkJCPHsX3fAQmRMvH5P3/fOVea5NPf2r4suiKX7dbLfn++DN6haVOLSJwTM0QkbsFqsBQALZZJSZzeWdVbsJYrIwCEmoVlQg9Ctyt0oEZ9PzbvFng9nm+blKuQA4iwBkJBQtopwlkQF0CLzzbtK/fj1IUnzIqL3DABrMo/ASBiD2IEEIlz6Z4LDOnFWRADAK/ntcQsiMRpCAgAHatI3H8BaEtlb+U3uSdqbUg74EEgdlvHNgSgBcgp+JY45YHngBRFXNFHFZ4DLISOYW8vSOD0JMxCRC2p/ZSgXyfqBlq1jIMAMo7UKh5dSA7XVfWSge76KXHl1wBPawGZRixYGQ8AAAAASUVORK5CYII=")
     HPUMP2 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAARtJREFUSEvVlr0NwkAMhXNFRmAaFkD0bJKGCSjIJixAj5iGEVIEHXCR4/jn+YKEoOQcvy/PZzupAX/jYzumzT1J4cfDbjxdruKZlx56KIuXRBxijXjOCQHkQMmBLJ7Pom9Pc8EA1MoiTP9DIbibLwCrvlRk6JupFFpt2853deaAVd8igghzIARkugOaAzXCURD1DnDxtnunHnq7saQ4yw0RQHrzNQAZWYNYAFji5E6INhRILU6CmAFoNfcSF0EkjkNAAN44jZz/FwC3lNaWntHO8MoQdkCDQG3nbWsCfPp8MW5rITxxdRt6ExABQsTNdexBSK2nTcnwJFyzhL62C6JrOCpc4kMfJEhZ0DU8AZxve/cjA225mrj0a4An1KaKRqV6EnYAAAAASUVORK5CYII=")
-
+    FourJ1 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAOFJREFUSEtjZBhgwEgN+98KC/8HmSP89i3J5pGsAdnB/19b/3+ncQMuRJEDEmq7/689JYYRICd2xmMNJG0GBrDjYY4g1nL00IKHAC4HfNoRh9UBjIyMcL0gRzCKHiUqNGEOABkqdEMD4gsQIDcEyElDIEeALRc9ivAFJSFAqiOQQ2xAQgDZwSgOmN9UQrRnkNMA0ZqwKERxQGlzKdFmwXIBugZSywQUByxoLiUqJWNzJbllAtUcQE6ZANJDVQfAHEFsmUATBxCdiKAKqR4Cow4YDYHREBh6IdB92AvcoBwoAACp8pPTED4QrgAAAABJRU5ErkJggg==")
+    FourJ2 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAZNJREFUSEvtlrFKA0EQhncVFAQtrbTRTp8hL2AeQKtooW/glSKaMq8Q0DJNSkHrNGKtdql8gxRCBBmZxX9vdrKX7N2mTKrM3Gz+b/+ZOWJNzQ+dHlBwZDD2obXW+ueDseH4w0xd/RFtuBjFyPtEKgcRlQBnh+UxBkH8DwVBiGkQztcGkKAORkLwQyXOKa77tD/+KLvBsXMF2YubHg3fdmeMeH05j5pzbExgdwCi2lIFwQ4tBJg8d+LdEXa73qM1wpGrzru5bW2a/Z11pyOdwEwsBJjrABGx+Nfk180FhPg75+5GUw+gxZNbUOWAdO/y6dsB4LYQlzm9DTNb0GQG0JuYIEMx0N72WjlwouVwJGjBw/116jYGO60tZ+txe/mDnO+3t4LNCwCKbpEMwFugi9EKzrOQjFE7F+CxWzR+L2AQcfsqQQ0dONAUQM4ArJdtkNuxdIDYAMqZkJsQ62+WA1Xise3QvUdNFoDe/9gNYy8pWZcNIF+1ySskCrMAmggufQhzIVYOrBywvdFJ+C83d6pqnv8D0cov6k2tTNMAAAAASUVORK5CYII=")
+    Jan1 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAOZJREFUSEvNltENhCAMhstsvtwC7nAruIC3wu1wC7gdlxJrEEsF2ib6ImlN/4+fAgaoPxEAwp6mMb7zB/M9MaqHNVLNPFCi1ApzUC2xQ5TEMXAHYOkATTB3dghAmi0rUljbDCC0h11KWgI7FaHSswHiF2J4i32idkl0AAHSVnGEqAKQ+OnUcQDpAvBwoxuAHLFaFhaAs5/rNgsIFYDFkqgBtBDPA2hdf+3Mj2a+/ATsh490xFk03xCApTALULPfQ7gJwFOYBVjmV1ynLV0+OM774PPbTjsG82Vs5Gq8FOVESxj6xgLgD6OGWxhGeMP6AAAAAElFTkSuQmCC")
+    Jan2 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAfhJREFUSEutVjFuwzAMpJA1a+f+IkvGLP1A0a1zXlAg6NwWyAs6dwv6gSwZu+QXnbN6NVRQEYXjWXZiN15sWaR4Io8nBRGJIhLk/Ni3vvHRebRLts1qIfPD0XzlJc7iNrRljAvE0zKGu59gb5uzhXWMQVywZrWI88PRbMy3CsAma0AYhALmoAikgCQAmKWQ59yuZ7smtk/z9O/1/iu+/T6nb/1vi+q8A5DRcSZcFvOAs+ZqZUFqAKisaZgWi6elaH3GckD9SprO/qOfKU4dMgJ/mLhGbOQPEjwUAFortbJ6IVsprUMA0nrKC30TcR13MtJEQvdo4ARXW+ZTYlhLQFKZIzhhC5eKVOyQX8VusAQKIHmti04wKdGfM2Ppr2lM4VtpD2OtRbDgrqgeSAqoraQ229ByMlm8hkvA7VMDMJCN0eznWnUW6ANQHHM2EHhNiiFDHWHC1vBEzLW/tC3mRt9ZgCC42+oHx5UAsCS8U5boPnAJADtfSn+HbdQloAOuS2a7RpjsBQCeXrcAkI9pd9QjABO6rhBNSH8PV5zk4n0CxW4SgB5hquGoXXac3SgA1wTG3bHKw82rTDkAU8UHLx14iBkZNRpe3Zy6OnGn+l+zYwx+STdw3vxcBjaPD/F9tU+Hj36jw8f3vmPL/24CoBaUwZjNfwDYGn+PuEoT4q/hKAAAAABJRU5ErkJggg==")
 
     Today = time.now().in_location("America/Chicago")
 
@@ -22,20 +25,32 @@ def main(config):
     HDAYS = int((HWEEN - Today).hours // 24)
     NEWYEAR = time.time(year = time.now().year, month = 1, day = 1).in_location("America/Chicago")
     NDAYS = int((NEWYEAR - Today).hours // 24)
-    #BDAY = time.time(year = time.now().year, month = 4, day = 20).in_location("America/Chicago")
-    #BDAYS = int((BDAY - Today).hours // 24)
+    Fourth = time.time(year = time.now().year, month = 7, day = 4).in_location("America/Chicago")
+    FDAYS = int((Fourth - Today).hours // 24)
 
-    if Today <= HWEEN :
-        DAY_TEXT = "Haloween"
+    if Today <= Fourth and Today >= NEWYEAR :
+        DAY_TEXT = "4th of July"
+        DAYS_UNTIL = FDAYS
+        IMAGE1 = FourJ1 
+        IMAGE2 = FourJ2
+
+    elif Today <= HWEEN and Today >= Fourth :
+        DAY_TEXT = "Halloween"
         DAYS_UNTIL = HDAYS
         IMAGE1 = HPUMP1 
         IMAGE2 = HPUMP2
 
-    else:
+    elif Today <= Xmas and Today >= HWEEN :
         DAY_TEXT = "Christmas"
         DAYS_UNTIL = XDAYS
         IMAGE1 = CTree1 
         IMAGE2 = CTree2   
+
+    else:
+        DAY_TEXT = "New Years"
+        DAYS_UNTIL = NDAYS
+        IMAGE1 = Jan1 
+        IMAGE2 = Jan2 
 
     return render.Root(
         delay = 1000,
@@ -59,9 +74,9 @@ def main(config):
                         ),
                         render.Column(
                             children=[
-                                render.Text("Days"),
-                                render.Text("  Until"),
-                                render.Text("     " + str(DAYS_UNTIL)),
+                                render.Text("In"),
+                                render.Text("  " + str(DAYS_UNTIL)),
+                                render.Text("    Days"),
                             ],
                         ),
                     ],
