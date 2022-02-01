@@ -33,37 +33,37 @@ def main(config):
     TDAYS = int((TGIVE - Today).hours // 24)
 
     if Today <= Easter and Today >= NEWYEAR :
-        DAY_TEXT = "Easter"
+        DAY_TEXT = "EASTER"
         DAYS_UNTIL = EDAYS
         IMAGE1 = Easter1 
         IMAGE2 = Easter2    
     
     elif Today <= Fourth and Today >= Easter :
-        DAY_TEXT = "4th of July"
+        DAY_TEXT = "4TH OF JULY"
         DAYS_UNTIL = FDAYS
         IMAGE1 = FourJ1 
         IMAGE2 = FourJ2
 
     elif Today <= HWEEN and Today >= Fourth :
-        DAY_TEXT = "Halloween"
+        DAY_TEXT = "HALLOWEEN"
         DAYS_UNTIL = HDAYS
         IMAGE1 = HPUMP1 
         IMAGE2 = HPUMP2
 
     elif Today <= TGIVE and Today >= HWEEN :
-        DAY_TEXT = "Thanksgiving"
+        DAY_TEXT = "THANKSGIVING"
         DAYS_UNTIL = TDAYS
         IMAGE1 = Thanks1 
         IMAGE2 = Thanks2
 
     elif Today <= Xmas and Today >= TGIVE :
-        DAY_TEXT = "Christmas"
+        DAY_TEXT = "CHRISTMAS"
         DAYS_UNTIL = XDAYS
         IMAGE1 = CTree1 
         IMAGE2 = CTree2   
 
     else:
-        DAY_TEXT = "New Years"
+        DAY_TEXT = "NEW YEARS"
         DAYS_UNTIL = NDAYS
         IMAGE1 = Jan1 
         IMAGE2 = Jan2 
@@ -73,7 +73,7 @@ def main(config):
         child = render.Column(
             children=[
                 render.Row(
-                    cross_align="center",
+                    cross_align= "center",
                     children=[
                         render.Text(DAY_TEXT),
                     ],
