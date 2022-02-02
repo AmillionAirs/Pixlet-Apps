@@ -6,9 +6,12 @@ URL = "https://svc.metrotransit.org/NexTripv2/51408?format=json"
 
 
 def main():
-    MTBL = http.get(URL).json()["stops"][0]["description"]
+    MT_Station_Name = http.get(URL).json()["stops"][0]["description"]
+    MT_Departure_Text = http.get(URL).json()["departures"][0]["departure_text"]
+    MT_Route_Destination = http.get(URL).json()["departures"][0]["description"]
+    MT_Route_Color = http.get(URL).json()["departures"][0]["route_short_name"]
 
     return render.Root(
-        child = render.Text(MTBL, font="Dina_r400-6")
+        child = render.Text(MT_Route_Color, font="Dina_r400-6")
      )
 
