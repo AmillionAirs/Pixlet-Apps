@@ -14,64 +14,86 @@ def main(config):
     FourJ2 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAZNJREFUSEvtlrFKA0EQhncVFAQtrbTRTp8hL2AeQKtooW/glSKaMq8Q0DJNSkHrNGKtdql8gxRCBBmZxX9vdrKX7N2mTKrM3Gz+b/+ZOWJNzQ+dHlBwZDD2obXW+ueDseH4w0xd/RFtuBjFyPtEKgcRlQBnh+UxBkH8DwVBiGkQztcGkKAORkLwQyXOKa77tD/+KLvBsXMF2YubHg3fdmeMeH05j5pzbExgdwCi2lIFwQ4tBJg8d+LdEXa73qM1wpGrzru5bW2a/Z11pyOdwEwsBJjrABGx+Nfk180FhPg75+5GUw+gxZNbUOWAdO/y6dsB4LYQlzm9DTNb0GQG0JuYIEMx0N72WjlwouVwJGjBw/116jYGO60tZ+txe/mDnO+3t4LNCwCKbpEMwFugi9EKzrOQjFE7F+CxWzR+L2AQcfsqQQ0dONAUQM4ArJdtkNuxdIDYAMqZkJsQ62+WA1Xise3QvUdNFoDe/9gNYy8pWZcNIF+1ySskCrMAmggufQhzIVYOrBywvdFJ+C83d6pqnv8D0cov6k2tTNMAAAAASUVORK5CYII=")
     Jan1 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAOZJREFUSEvNltENhCAMhstsvtwC7nAruIC3wu1wC7gdlxJrEEsF2ib6ImlN/4+fAgaoPxEAwp6mMb7zB/M9MaqHNVLNPFCi1ApzUC2xQ5TEMXAHYOkATTB3dghAmi0rUljbDCC0h11KWgI7FaHSswHiF2J4i32idkl0AAHSVnGEqAKQ+OnUcQDpAvBwoxuAHLFaFhaAs5/rNgsIFYDFkqgBtBDPA2hdf+3Mj2a+/ATsh490xFk03xCApTALULPfQ7gJwFOYBVjmV1ynLV0+OM774PPbTjsG82Vs5Gq8FOVESxj6xgLgD6OGWxhGeMP6AAAAAElFTkSuQmCC")
     Jan2 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAfhJREFUSEutVjFuwzAMpJA1a+f+IkvGLP1A0a1zXlAg6NwWyAs6dwv6gSwZu+QXnbN6NVRQEYXjWXZiN15sWaR4Io8nBRGJIhLk/Ni3vvHRebRLts1qIfPD0XzlJc7iNrRljAvE0zKGu59gb5uzhXWMQVywZrWI88PRbMy3CsAma0AYhALmoAikgCQAmKWQ59yuZ7smtk/z9O/1/iu+/T6nb/1vi+q8A5DRcSZcFvOAs+ZqZUFqAKisaZgWi6elaH3GckD9SprO/qOfKU4dMgJ/mLhGbOQPEjwUAFortbJ6IVsprUMA0nrKC30TcR13MtJEQvdo4ARXW+ZTYlhLQFKZIzhhC5eKVOyQX8VusAQKIHmti04wKdGfM2Ppr2lM4VtpD2OtRbDgrqgeSAqoraQ229ByMlm8hkvA7VMDMJCN0eznWnUW6ANQHHM2EHhNiiFDHWHC1vBEzLW/tC3mRt9ZgCC42+oHx5UAsCS8U5boPnAJADtfSn+HbdQloAOuS2a7RpjsBQCeXrcAkI9pd9QjABO6rhBNSH8PV5zk4n0CxW4SgB5hquGoXXac3SgA1wTG3bHKw82rTDkAU8UHLx14iBkZNRpe3Zy6OnGn+l+zYwx+STdw3vxcBjaPD/F9tU+Hj36jw8f3vmPL/24CoBaUwZjNfwDYGn+PuEoT4q/hKAAAAABJRU5ErkJggg==")
-    Easter1 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAYxJREFUSEtjZGBg+K847TMDCNzP4mVAZoPE0PnEiMH0wMw8e8cSbD42wIjNAegOARlIihjIwpBdu+CeIugAZJfBLMMnhi9U1ri5MRirHIdrB6kFiVE1BGCGIYcKzBJkn8McSjcHwCxHT094HaA47fN/nOFDpgR6aICMweUIRmo7AJvlMH9gcwRNHIAcFTDfo4vBHEV1B6DHGsjXyJaj8we3A2DZDDm7kZIu0X2LnBZgoYIzBECW/u9qYGAsa4DTyEUsKQ7BFy0D4gBkBw1yB/xHLaMYGRnhtSMlUYARAsiJDSb5H8lykMUwPqmOiNgfCrdvheNqDHeDq2OQ4ciWoKsi1wEgy5EtReeD7AGnAXCKRwtunNUnkdFwb088QxXzN7ADNOtmMlxvSmcAOaAtZz+D0tU3cONp4gCQ5TDgfcgKzt66thrOhjkCwwGg4IYCRnDcgIIJIUZUIkSOd1whCYsaeDZEjwaYpdRIfOiOQE4XKOUAyBHIAL15RmpJiC0k0HMCo8/6AKo3SEgpIwAtEFF/JfwvoQAAAABJRU5ErkJggg==")
-    Easter2 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAaNJREFUSEvNlrFOwzAQhm0xFzHAAxTxBkyMDHRCAiGK4BHgAZi7wlx1YmFDohJ7F0Ym3gDBA7CRGQWdxe/+vjiOgxIgS5OL7f/zf+dL7XBWlKbHaz4aJVe3fQCI6PFi4YR/HQCCAGiC6MyBmDC8T7nQKYDedU4arDEmKMLhrHDgbxcD94tnjiGOMVxlMl7Hdez5ZcdPcQAsAiEGwQJ6HFYRQbwTu7e3ngJwrAlheY/7wAG9ewikXNHAAOC5sRjeZzvANvOONUAMSGoBc/TcaA3wIJ6oHYmlQNcK14s4qVOUPAV11LmNkxsSz+F4LYCIl9cTYy8n/reuCHOBuC/giP4JAAP/c4Ay/FBaayvnu639erxzIFbpJYmLMJ7bQpw+jr3m3e59hdcdQ1mcRSqUPwQQcRbVz6LjHeAdp2zNdWB8vmZWTvYcwOvGwGy+F0YAph9nZv3gaPktQAq6BBBxXFfzT3+/enPr7wFRcUB2+H1ZlxuxaRnLKkLOe52bSI0/hq7xqMKTyV0Un4bgugj6QNN3vG0njDmhT4Ldfzjs9V9xU5/4Al0oQX/7KK5sAAAAAElFTkSuQmCC")
+    Easter1 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAVpJREFUSEvFljFuwkAQRWcipUTiBhHp6GipUBqqFEiJJV8BCkpqKiTS0MEVIhEpPU3OkDZNSlokDmA0FjMaD95lQWt7Gq9Xsv/bP3/Xxs76mEHF9TUcOhUwFoAVed/tRLQWAJ+JjQCQKLtQOwAL1g6gV6ozQO1xuRAthCxSFj6fE1EBbBB1DlwhrQzAirtyUSuAbQ/dewH+Jy3orI/A13sPTLt6nRcnAIlmH3PA2VyuBBOjdHsaAdCLaB4AAORrqC3OW5AVP5SImGciZiEBsBAJcFlxnr8VIv1J5J2fL9sL9gKA87BAFDduASBxLWrvSS8IoBCawDY89vbwtprmAMm4DdvNAQhg8fAHz4NfeWUewrJ++9y4lgMS5xr1uzJepk8yZggnACKihOP8WKj9uu+uhXBrZBtaF2wgQ8VZ0Aehc1E4BwiCi20umwvdhmUQdifg6/eo8r9iH/AJSZrpqOAnWicAAAAASUVORK5CYII=")
+    Easter2 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAWBJREFUSEtjVJz2+T8DjcEaNzecNjBS0wHoFoXs2gW2mG4OwOXNAXMAyGJQKAyIA2CWDogDkC2HRQuuUKBqIkROcLAECBPDFRJUdwB6QsQWGshqaOoAWCJEthA5YYJCha4OQHcQiI/XAfezeBkUp31mgNGUFpgkOQBk6f+uBgbGsgY4DXIMJWDQOQDkGZxRQIsQwBZ6jAwMDPDaEDmIwQ74j1pRMjIygtMENQHYATCLQBbAALrlMHFSHRGxPxRu5grH1RhuR3EALp+BLEV2JLGhALIc2VJ0PjgNIIcAMUFLbAjc2xPPUMX8DewAzbqZDNeb0hlADmjL2c+gdPUN3CpwIsQW3/hCg1AIgCyHAe9DVnD21rXVcDbMETgdwMjIyAhPHFBtxPoeOd5xeQQWNfBsiB4K6AmSWMthFuJzBHK6QCkHQI6AAVgwYxMjJq2A1GBzBHpOYPRZH0DzVjE+BwMAcR/xGL02ZuEAAAAASUVORK5CYII=")
     Thanks1 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAeFJREFUSEtjZICA/1CaEUpjE4OpAcnB1OESQzYH2SyY8XB5EANkCDYNyJagq4PpQdaLTQxmITY7wHLIBiOHAi6D0X1ATgigeJZcn1E1BGiRBpCSEjyU0cXgUYAsQXc2euIbUg5AToAY2YtYn1ASAgPjgMpQD7DFzzWcwZ6cn7eBIXFSAJgteWMvmG5fvYNojxGtEGQwzPL21TtwhnBlqAdJjiDaATDLzxzYBbd8wut/DHorv4D5Tjl8cHETBzeiHUGUA7BZDrIB5ABtBgYG5pVfUBwAkiPWEUQ7ANnnMK8ih8CfdXpgYbd9D1BCglB6oKoDkC2HhQJNHAAL3hikxLgEmviQQwqkjuoOgFkOskhC25Sh4sBJcJAXiDLB4x3EB8ljc8DZO5bgbGyschwc+kRFAXIWhBkOokEOAAGQI0AOgAFsCdBnfcD/LYEbGJEdABJDcQAoteMLMldRJnjpB7NcRlSQ4cnr92C7X1w9DXfE7tf/MDwHsrBR9yVYTf1lcQaQg+CKCFkOMxnkCGTLYeLIjsBmOUgdyAGbbV6DtfgeEUU44P8MeJuQgTEDf7T87mH4z1rCwIgcGjBHgCyGycODAolBsQNAhsPMAzkC3RJC8rBQANGg4AcnQpCrsLmWXmIAYKfyrMUe/3IAAAAASUVORK5CYII=")
     Thanks2 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAfRJREFUSEvVlL9LQzEQxy8VV8HhgYJ/QKHSSZ1FsXRwqEM3l3YWcRCxf0FBHMQ/oF1cSkE7OBRF6eqP0UJHB0Ghg0s3pZEL7+K9JK+m2lLMkpe75L6fu1yegAkPEerLcKY1Lk0brdFnnjNtPA6PRelqP35gYNcBLmLuozP8rMtGgi4N5eOBecZxgc0M4qoyqAIR328zG2kFXPf91x7grU1JmjZ9BRN9B+ZdDQPD79/qbt9A/w+glM+qzF+T6yrJ6m4DCqc59T3fuVFzud70Tsx7IwYm8XK9GVvhUj47FIQ3AIk/tq60+Em3D+laT63Xdma0fWk14w3hBeASRwUESAHAVK0XAUCfL4Q3AM+cUuUV+DxPK3Pm9jlSiZ/6YaQAXJyqMBYAKu82a8azsPl4pXAfAUgppRBCJ0zrSAVYl1t2CkziuJ5LLcNh606VfC9I6HvHNfo5ANpIlMNYQnElIzgKjjMC4EAIBKBhNqCZPYdRAJsXOeu3ernVsPpjI0jofSS+EMzCS/ddab+1HzTEdbcfOc8hrAq0ASQ+pzaAelbh7GxQhODipMghLPH7pJWgWOmo+FrEgIh9HR/HIKf3QfBqEAQKk59slUpFFhaPdGXoo/p0AMVi8bsr0RFCDBSnAAhhRkVx048AlnpoUACu+487MA77F6E3AXGamYnSAAAAAElFTkSuQmCC")
+    VDAY1 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAJZJREFUSEvtlEEOwCAIBPE9/f9T+p42HEgNKbogxjbRMzLjqhRavMpiPm2BncA/EjiJLuu3HPQ8ZLSu7tVNoNVUGrEEWqcP0hRAmnrnSJ0Y7/22ABtmpqBP300gU+ANDglkSFhwWGBEogV3CUQkevCpAgjcLeBJYZoAIoHCQwnI5LPmgweeLuCFDwnoq4jAhwVEIgrn/TeEqiQYJ8YpqQAAAABJRU5ErkJggg==")
+    VDAY2 = base64.decode("iVBORw0KGgoAAAANSUhEUgAAACAAAAAXCAYAAABqBU3hAAAAAXNSR0IArs4c6QAAAKBJREFUSEvtlTcSwCAMBOGLPJQv4lEBY2yUCQ306HYU7mI4/OJh/YAClJQKBhdznvavK0SJUjDWf1CzAViKeMcHnbwAtwPuK/AsYreEtdCua6he8jOUHQBvIxs62kqIr4uaLNU695GFk2E0sxNYfrBpOAOCCi8WANrthXADeCAo8S4NJYul7QQnvhRAIq4GkI5CKm4C4CA04mYADEIrDnUeUatcGGDtNAEAAAAASUVORK5CYII=")
+
 
     #Find todays date for holiday countdowns
     Today = time.now().in_location("America/Chicago")
 
-    Xmas = time.time(year = time.now().year, month = 12, day = 25).in_location("America/Chicago") 
+    Xmas = time.time(year = time.now().year, month = 12, day = 26).in_location("America/Chicago") 
     XDAYS = int((Xmas - Today).hours // 24)
-    HWEEN = time.time(year = time.now().year, month = 10, day = 31).in_location("America/Chicago")
+    HWEEN = time.time(year = time.now().year, month = 11, day = 1).in_location("America/Chicago")
     HDAYS = int((HWEEN - Today).hours // 24)
-    NEWYEAR = time.time(year = time.now().year, month = 1, day = 1).in_location("America/Chicago")
+    NEWYEAR = time.time(year = time.now().year, month = 1, day = 2).in_location("America/Chicago")
     NDAYS = int((NEWYEAR - Today).hours // 24)
-    Fourth = time.time(year = time.now().year, month = 7, day = 4).in_location("America/Chicago")
+    Fourth = time.time(year = time.now().year, month = 7, day = 5).in_location("America/Chicago")
     FDAYS = int((Fourth - Today).hours // 24)
-    Easter = time.time(year = time.now().year, month = 4, day = 17).in_location("America/Chicago")
-    EDAYS = int((Easter - Today).hours // 24)
+    Valentine = time.time(year = time.now().year, month = 2, day = 15).in_location("America/Chicago")
+    VDAYS = int((Valentine - Today).hours // 24)
 
     #Find out what weekday the month starts on to tell when holiday is
-    First_of_Nov = time.time(year = time.now().year, month = 11, day = 2).in_location("America/Chicago")
+    First_of_Nov = time.time(year = time.now().year, month = 11, day = 1).in_location("America/Chicago")
     Day_Of_Week_Nov = First_of_Nov.format('Monday')
     
-    First_of_Apr = time.time(year = time.now().year, month = 4, day = 2).in_location("America/Chicago")
+    First_of_Apr = time.time(year = time.now().year, month = 4, day = 1).in_location("America/Chicago")
     Day_of_Week_Apr = First_of_Apr.format('Monday')
 
     if Day_Of_Week_Nov == 'Sunday' :
-        TDAYS = int(((First_of_Nov - Today).hours // 24) + 25)
-        TGIVE = time.time(year = time.now().year, month = 11, day = 25).in_location("America/Chicago")
+        TDAYS = int(((First_of_Nov - Today).hours // 24) + 26)
+        EDAYS = int(((First_of_Apr - Today).hours // 24) + 23)
+        TGIVE = time.time(year = time.now().year, month = 11, day = 26).in_location("America/Chicago")
+        Easter = time.time(year = time.now().year, month = 4, day = 23).in_location("America/Chicago")
 
     elif Day_Of_Week_Nov == 'Monday' :
-        TDAYS = int(((First_of_Nov - Today).hours // 24) + 24)
-        TGIVE = time.time(year = time.now().year, month = 11, day = 24).in_location("America/Chicago")
+        TDAYS = int(((First_of_Nov - Today).hours // 24) + 25)
+        EDAYS = int(((First_of_Apr - Today).hours // 24) + 22)
+        TGIVE = time.time(year = time.now().year, month = 11, day = 25).in_location("America/Chicago")
+        Easter = time.time(year = time.now().year, month = 4, day = 22).in_location("America/Chicago")
 
     elif Day_Of_Week_Nov == 'Tuesday' :
-        TDAYS = int(((First_of_Nov - Today).hours // 24) + 23)
-        TGIVE = time.time(year = time.now().year, month = 11, day = 23).in_location("America/Chicago")
+        TDAYS = int(((First_of_Nov - Today).hours // 24) + 24)
+        EDAYS = int(((First_of_Apr - Today).hours // 24) + 21)
+        TGIVE = time.time(year = time.now().year, month = 11, day = 24).in_location("America/Chicago")
+        Easter = time.time(year = time.now().year, month = 4, day = 21).in_location("America/Chicago")
 
     elif Day_Of_Week_Nov == 'Wednesday' :
-        TDAYS = int(((First_of_Nov - Today).hours // 24) + 22)
-        TGIVE = time.time(year = time.now().year, month = 11, day = 22).in_location("America/Chicago")
+        TDAYS = int(((First_of_Nov - Today).hours // 24) + 23)
+        EDAYS = int(((First_of_Apr - Today).hours // 24) + 20)
+        TGIVE = time.time(year = time.now().year, month = 11, day = 23).in_location("America/Chicago")
+        Easter = time.time(year = time.now().year, month = 4, day = 20).in_location("America/Chicago")
 
     elif Day_Of_Week_Nov == 'Thursday' :
-        TDAYS = int(((First_of_Nov - Today).hours // 24) + 21)
-        TGIVE = time.time(year = time.now().year, month = 11, day = 21).in_location("America/Chicago")
+        TDAYS = int(((First_of_Nov - Today).hours // 24) + 22)
+        EDAYS = int(((First_of_Apr - Today).hours // 24) + 19)
+        TGIVE = time.time(year = time.now().year, month = 11, day = 22).in_location("America/Chicago")
+        Easter = time.time(year = time.now().year, month = 4, day = 19).in_location("America/Chicago")
 
     elif Day_Of_Week_Nov == 'Friday' :
-        TDAYS = int(((First_of_Nov - Today).hours // 24) + 20)
-        TGIVE = time.time(year = time.now().year, month = 11, day = 20).in_location("America/Chicago")
-                    
-    else:  
-        TDAYS = int(((First_of_Nov - Today).hours // 24) + 19)
-        TGIVE = time.time(year = time.now().year, month = 11, day = 19).in_location("America/Chicago")   
+        TDAYS = int(((First_of_Nov - Today).hours // 24) + 21)
+        EDAYS = int(((First_of_Apr - Today).hours // 24) + 18)
+        TGIVE = time.time(year = time.now().year, month = 11, day = 21).in_location("America/Chicago")
+        Easter = time.time(year = time.now().year, month = 4, day = 18).in_location("America/Chicago")
 
+    else:  
+        TDAYS = int(((First_of_Nov - Today).hours // 24) + 20)
+        EDAYS = int(((First_of_Apr - Today).hours // 24) + 17)
+        TGIVE = time.time(year = time.now().year, month = 11, day = 20).in_location("America/Chicago")   
+        Easter = time.time(year = time.now().year, month = 4, day = 17).in_location("America/Chicago")
 
 
         #Determine What Holiday It is
-    if Today <= Easter and Today >= NEWYEAR :
+    if Today <= Valentine and Today >= NEWYEAR :
+        DAY_TEXT = "VALENTINES"
+        DAYS_UNTIL = VDAYS
+        IMAGE1 = VDAY1 
+        IMAGE2 = VDAY2   
+    
+    elif Today <= Easter and Today >= Valentine :
         DAY_TEXT = "EASTER"
         DAYS_UNTIL = EDAYS
         IMAGE1 = Easter1 
@@ -129,8 +151,8 @@ def main(config):
                         ),
                         render.Column(
                             children=[
-                                render.Text("In"),
-                                render.Text("  " + str(DAYS_UNTIL)),
+                                render.Box(width=1, height=3),
+                                render.Text(" " + str(DAYS_UNTIL), font ="Dina_r400-6"),
                                 render.Text("    Days"),
                             ],
                         ),
