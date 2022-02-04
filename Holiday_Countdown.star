@@ -1,3 +1,10 @@
+"""
+Applet: US Holiday Countdown
+Summary: Countdown to Nearest Holiday
+Description: Counts down day to nearest holiday in USA.
+Author: Alex Miller
+"""
+
 load("render.star", "render")
 load("time.star", "time")
 load("encoding/base64.star", "base64")
