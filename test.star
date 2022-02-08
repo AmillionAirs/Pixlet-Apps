@@ -1,20 +1,17 @@
 load("render.star", "render")
-load("time.star", "time")
+load("http.star", "http")
+load("encoding/json.star", "json")
+
+NUMBERS_URL = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny?sort=-record_date&format=json&page[number]=1&page[size]=1"
+GOLD_URL = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/gold_reserve?sort=-record_date&format=json&page[number]=1&page[size]=5"
 
 def main(config):
 
-    Today = time.now().in_location("America/Chicago")
+    PB_NUMS = http.get(NUMBERS_URL).json()["data"][0]["tot_pub_debt_out_amt"]
+    GOLD_LOC = http.get(GOLD_URL).json()["data"][0]["location_desc"]
+    GOLD_AMT = http.get(GOLD_URL).json()["data"][0]["book_value_amt"]
 
-    First_Day_of_Nov = time.time(year = time.now().year, month = 11, day = 2).in_location("America/Chicago") 
-    Day_Of_Week = First_Day_of_Nov.format('Mon')
-
-    if Day_Of_Week == 'Mon' :
-          First_Day_of_Nov + time.time(day = 14)
-     else:
-          First_Day_of_Nov + time.time(day = 1)
-    
-    #XDAYS = int((Xmas - Today).hours // 24)
 
     return render.Root(
-        child = render.Text(str(Day_Of_Week))
+        child = render.Text(str(GOLD_AMT), font="tom-thumb")
     )

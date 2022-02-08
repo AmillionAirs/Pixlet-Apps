@@ -15,9 +15,9 @@ def main():
     Jackpot = http.get(Next_Draw_URL).json()[0]["field_prize_amount"]
     
     if Winner == "None" :
-          Won = "No W"
+          Won = "0 Winners"
     else:
-          Won = "Won"
+          Won = "1 Winner"
 
     return render.Root(
           child = render.Column(
@@ -71,18 +71,19 @@ def main():
                     ),
                     render.Row(
                          children = [
-                              render.Box(width=9, height=20),
+                              render.Box(width=1, height=20),
                               render.Column(
                                    children = [
                                         render.Text(Draw_Date[5:7] + "/" + Draw_Date[8:10], font="tom-thumb"),
-                                        render.Text(Won),
+                                        render.Text(Next_Draw_Date[5:7] + "/" + Next_Draw_Date[8:10], font="tom-thumb"),
+
                                    ],
                               ),
-                              render.Box(width=4, height=20),
+                              render.Box(width=2, height=20),
                               render.Column(
                                    children = [
-                                        render.Text(Next_Draw_Date[5:7] + "/" + Next_Draw_Date[8:10], font="tom-thumb"),
-                                        render.Text("Next"),
+                                        render.Text(Won, font="tom-thumb"),
+                                        render.Text("Upcoming", font="tom-thumb"),
                                    ],
                               ),
                          ],

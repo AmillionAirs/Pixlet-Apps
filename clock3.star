@@ -52,16 +52,20 @@ def main(config):
        child = render.Column(
            children=[
                render.Image(Top),
-               render.Row(
+               render.Stack(
                    children=[
-                       render.Box(width=Hand, height=9),
-                       render.Box(width=1, height=9, color="#a0a"),
-                   ],
-               ),
-               render.Row(
-                   children=[
-                       render.Box(width=int(Minute) + 3, height=9),
-                       render.Box(width=1, height=9, color="#aa0"),
+                        render.Row(
+                            children=[
+                                render.Box(width=Hand, height=9),
+                                render.Box(width=1, height=7, color="#a0a"),
+                            ],
+                        ),
+                        render.Row(
+                            children=[
+                                render.Box(width=int(Minute) + 3, height=9),
+                                render.Box(width=1, height=9, color="#aa0"),
+                            ],
+                        ),
                    ],
                ),               
            ],
