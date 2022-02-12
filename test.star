@@ -2,16 +2,13 @@ load("render.star", "render")
 load("http.star", "http")
 load("encoding/json.star", "json")
 
-NUMBERS_URL = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/debt_to_penny?sort=-record_date&format=json&page[number]=1&page[size]=1"
-GOLD_URL = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/gold_reserve?sort=-record_date&format=json&page[number]=1&page[size]=5"
+F1_URL = "http://ergast.com/api/f1/2022/next.json"
 
 def main(config):
 
-    PB_NUMS = http.get(NUMBERS_URL).json()["data"][0]["tot_pub_debt_out_amt"]
-    GOLD_LOC = http.get(GOLD_URL).json()["data"][0]["location_desc"]
-    GOLD_AMT = http.get(GOLD_URL).json()["data"][0]["book_value_amt"]
-
+    F1_NAME = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["raceName"]
+    F1_DATE = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["date"]
 
     return render.Root(
-        child = render.Text(str(GOLD_AMT), font="tom-thumb")
+        child = render.Text(F1_DATE)
     )
