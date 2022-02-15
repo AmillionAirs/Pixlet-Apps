@@ -17,7 +17,7 @@ def main():
     if Winner == "None" :
           Won = "0 Winners"
     else:
-          Won = "1 Winner"
+          Won = "1+ Winner"
 
     return render.Root(
           child = render.Column(
@@ -75,6 +75,7 @@ def main():
                               render.Column(
                                    children = [
                                         render.Text(Draw_Date[5:7] + "/" + Draw_Date[8:10], font="tom-thumb"),
+                                        render.Box(width=20, height=1),
                                         render.Text(Next_Draw_Date[5:7] + "/" + Next_Draw_Date[8:10], font="tom-thumb"),
 
                                    ],
@@ -83,7 +84,8 @@ def main():
                               render.Column(
                                    children = [
                                         render.Text(Won, font="tom-thumb"),
-                                        render.Text("Upcoming", font="tom-thumb"),
+                                        render.Box(width=38, height=1),
+                                        render.Text("Upcomming", font="tom-thumb"),
                                    ],
                               ),
                          ],

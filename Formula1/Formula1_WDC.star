@@ -14,11 +14,26 @@ def main(config):
     return render.Root(
         child = render.Column(
             children = [
-                render.Text("WCC Standings 2022"),
+                render.Text("WDC Standings"),
                 render.Box(width=64, height=1, color="#a0a"),
-                render.Text("Alexander Albon"),
-                render.Text("Alexander Albon"),
-                render.Text("Alexander Albon"),
+                render.Row(
+                    children = [
+                        render.Box(width=7, height=7, color="#a0a"),
+                        render.Text("Alexander Albon"),
+                    ],
+                ),
+                render.Row(
+                    children = [
+                        render.Box(width=7, height=7, color="#a0a"),
+                        render.Text("Alexander Albon"),
+                    ],
+                ),
+                render.Row(
+                    children = [
+                        render.Box(width=7, height=7, color="#a0a"),
+                        render.Text("Alexander Albon"),
+                    ],
+                ),
             ],
         ),
     )
