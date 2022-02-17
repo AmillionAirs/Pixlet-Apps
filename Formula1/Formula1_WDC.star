@@ -18,20 +18,50 @@ def main(config):
                 render.Box(width=64, height=1, color="#a0a"),
                 render.Row(
                     children = [
-                        render.Box(width=7, height=7, color="#a0a"),
-                        render.Text("Alexander Albon"),
+                        render.Stack(
+                            children = [
+                                render.Box(width=14, height=7),
+                                render.Text("888", font="5x8"),
+                            ],
+                        ),
+                        render.Marquee(
+                            width=64,
+                            child=render.Text("Alexander Albon"),
+                            offset_start=5,
+                            offset_end=5,
+                        ),
                     ],
                 ),
                 render.Row(
                     children = [
-                        render.Box(width=7, height=7, color="#a0a"),
-                        render.Text("Alexander Albon"),
+                        render.Stack(
+                            children = [
+                                render.Box(width=14, height=7),
+                                render.Text("888", font="5x8"),
+                            ],
+                        ),
+                        render.Marquee(
+                            width=64,
+                            child=render.Text("Alexander Albon"),
+                            offset_start=5,
+                            offset_end=5,
+                        ),
                     ],
                 ),
-                render.Row(
+                 render.Row(
                     children = [
-                        render.Box(width=7, height=7, color="#a0a"),
-                        render.Text("Alexander Albon"),
+                        render.Stack(
+                            children = [
+                                render.Box(width=14, height=7),
+                                render.Text("888", font="5x8"),
+                            ],
+                        ),
+                        render.Marquee(
+                            width=64,
+                            child=render.Text("Alexander Albon"),
+                            offset_start=5,
+                            offset_end=5,
+                        ),
                     ],
                 ),
             ],
