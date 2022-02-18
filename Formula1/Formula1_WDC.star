@@ -3,13 +3,14 @@ load("http.star", "http")
 load("encoding/json.star", "json")
 load("encoding/base64.star", "base64")
 
-#F1_URL = "http://ergast.com/api/f1/2022/driverStandings"
+F1_URL = "http://ergast.com/api/f1/2022/driverStandings"
 
 def main(config):
 
 
-    #F1_NAME = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["raceName"]
-    #F1_Team = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["date"]
+    #F1_FNAME = http.get(F1_URL).json()["MRData"]["StandingsTable"]["StandingsLists"]["DriverStandings"]["Driver"]
+    #F1_LNAME = http.get(F1_URL).json()["MRData"]["StandingsTable"]["StandingsLists"]["DriverStandings"]["Driver"]
+    F1_POINTS = http.get(F1_URL).json()["MRData"]["StandingsTable"]["StandingsLists"]["DriverStandings"]
 
     return render.Root(
         child = render.Column(
@@ -21,7 +22,7 @@ def main(config):
                         render.Stack(
                             children = [
                                 render.Box(width=14, height=7),
-                                render.Text("888", font="5x8"),
+                                render.Text(F1_POINTS[0]["points"], font="5x8"),
                             ],
                         ),
                         render.Marquee(
