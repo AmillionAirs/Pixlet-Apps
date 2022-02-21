@@ -1,18 +1,40 @@
 load("render.star", "render")
 load("time.star", "time")
+load("encoding/json.star", "json")
 load("encoding/base64.star", "base64")
+load("schema.star", "schema")
+
+DEFAULT_LOCATION = """
+{
+	"lat": "40.6781784",
+	"lng": "-73.9441579",
+	"description": "Brooklyn, NY, USA",
+	"locality": "Brooklyn",
+	"place_id": "ChIJCSF8lBZEwokRhngABHRcdoI",
+	"timezone": "America/New_York"
+}
+"""
 
 def main(config):
 
-    timezone = config.get("timezone") or "America/Chicago"
+    Top = base64.decode("iVBORw0KGgoAAAANSUhEUgAAAEAAAAALCAYAAADP9otxAAAAAXNSR0IArs4c6QAAAMpJREFUSEvtVkkSwzAIg/f0/0/Je9zxgQzViKUdckmaWwDbSFhglYd/6vGvtZaqnrb9v/0d247x6ztrLSY6w+wsDs+yHM3O/CynlICdAJLCbNmhGcHmY8R7QitQ3ViW+xgBBgYrMUVAtD+SUxUDyR4hgFUykoCXU3YDEDBWrwJeSeTcf6IHVFfZ+ytgHmgkDRYTEYKx2G/KJtip2DcEYLPs9pSJG8D62Z+AqySQjUE29tiozeIqjf80Bp/4JvqQwCGyXsDCISJ3tr0Bhbst/g1jLG4AAAAASUVORK5CYII=")
+    
+    location = config.get("location", DEFAULT_LOCATION)
+    loc = json.decode(location)
+    timezone = loc["timezone"]
+
     now = time.now().in_location(timezone)
     Minute = now.format("4")
     Hour = now.format("3")
     Month = now.format("Jan")
-    Year = now.format("2006")
 
-    Top = base64.decode("iVBORw0KGgoAAAANSUhEUgAAAEAAAAALCAYAAADP9otxAAAAAXNSR0IArs4c6QAAAMpJREFUSEvtVkkSwzAIg/f0/0/Je9zxgQzViKUdckmaWwDbSFhglYd/6vGvtZaqnrb9v/0d247x6ztrLSY6w+wsDs+yHM3O/CynlICdAJLCbNmhGcHmY8R7QitQ3ViW+xgBBgYrMUVAtD+SUxUDyR4hgFUykoCXU3YDEDBWrwJeSeTcf6IHVFfZ+ytgHmgkDRYTEYKx2G/KJtip2DcEYLPs9pSJG8D62Z+AqySQjUE29tiozeIqjf80Bp/4JvqQwCGyXsDCISJ3tr0Bhbst/g1jLG4AAAAASUVORK5CYII=")
     
+    if config.bool("Year"):
+        Year = now.format("2006")
+    else:
+        Year = " "
+
+   
     if Month == "Jan" :
         MHand = 3
     
@@ -117,3 +139,17 @@ def main(config):
            ],
        ), 
   )
+
+def get_schema():
+    return schema.Schema(
+        version = "1",
+        fields = [
+            schema.Toggle(
+                id = "Year",
+                name = "Display Year",
+                desc = "A toggle to display current.",
+                icon = "compress",
+                default = False,
+            ),
+        ],
+    )
