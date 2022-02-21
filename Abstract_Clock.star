@@ -161,8 +161,8 @@ def get_schema():
         fields = [
             schema.Toggle(
                 id = "Day",
-                name = "Display Day",
-                desc = "A toggle to display current Day.",
+                name = "Display day",
+                desc = "A toggle to display current Day of the week.",
                 icon = "compress",
                 default = False,
             ),
