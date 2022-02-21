@@ -34,6 +34,11 @@ def main(config):
     else:
         Year = " "
 
+    if config.bool("Month_Icon"):
+        MIcon = "#0a0"
+    else:
+        MIcon = "#000" 
+
    
     if Month == "Jan" :
         MHand = 3
@@ -118,7 +123,7 @@ def main(config):
                         render.Row(
                             children=[
                                 render.Box(width=MHand, height=11),
-                                render.Box(width=1, height=13, color="#0a0"),
+                                render.Box(width=1, height=13, color=MIcon),
                             ],
                         ),
                         render.Row(
@@ -149,6 +154,13 @@ def get_schema():
                 name = "Display Year",
                 desc = "A toggle to display current.",
                 icon = "compress",
+                default = False,
+            ),
+                schema.Toggle(
+                id = "Month_Icon",
+                name = "Display Month Hand",
+                desc = "A toggle to display a line for the current month.",
+                icon = "calandar",
                 default = False,
             ),
         ],
