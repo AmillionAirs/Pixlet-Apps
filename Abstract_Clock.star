@@ -29,10 +29,12 @@ def main(config):
     Month = now.format("Jan")
 
     
-    if config.bool("Year"):
-        Year = now.format("2006")
+    if config.bool("Day"):
+        Day = now.format("Monday").upper()
+        Day_Num = now.format("2")
     else:
-        Year = " "
+        Day = " "
+        Day_Num = " "
 
     if config.bool("Month_Icon"):
         MIcon = "#0a0"
@@ -140,7 +142,15 @@ def main(config):
                         ),
                    ],
                ),
-               render.Text("       " + Year),               
+               render.Row(
+                   expanded=True,
+                   cross_align="end",
+                   main_align="space_between",
+                   children=[
+                       render.Text(Day),
+                       render.Text(Day_Num),  
+                    ],
+               ),             
            ],
        ), 
   )
@@ -150,15 +160,15 @@ def get_schema():
         version = "1",
         fields = [
             schema.Toggle(
-                id = "Year",
-                name = "Display Year",
-                desc = "A toggle to display current.",
+                id = "Day",
+                name = "Display Day",
+                desc = "A toggle to display current Day.",
                 icon = "compress",
                 default = False,
             ),
                 schema.Toggle(
                 id = "Month_Icon",
-                name = "Display Month Hand",
+                name = "Display Month",
                 desc = "A toggle to display a line for the current month.",
                 icon = "calandar",
                 default = False,
