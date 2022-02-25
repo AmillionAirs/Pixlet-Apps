@@ -85,7 +85,7 @@ def main(config):
                             ],
                         ),
                         render.Box(width = 6, height = 10),
-                        render.Text(MTT[1]["departures"][1]["departure_text"], font = "Dina_r400-6"),
+                        render.Text(MTT["departures"][1]["departure_text"], font = "Dina_r400-6"),
                     ],
                 ),
                 render.Box(width = 64, height = 1, color = "#a00"),
