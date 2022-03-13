@@ -27,6 +27,12 @@ def main(config):
     if config.get("local_timezone") == "CST":
         TZ = CST
 
+    elif config.get("local_timezone") == "MST":
+        TZ = MST
+
+    elif config.get("local_timezone") == "PST":
+        TZ = PST
+
     else:
         TZ = EST
 
@@ -101,12 +107,20 @@ def get_schema():
                 default = "CST",
                 options = [
                     schema.Option(
+                        display = "EST",
+                        value = "EST",
+                    ),
+                    schema.Option(
                         display = "CST",
                         value = "CST",
                     ),
-                    schema.Option(
-                        display = "EST",
-                        value = "EST",
+                        schema.Option(
+                        display = "MST",
+                        value = "MST",
+                    ),
+                        schema.Option(
+                        display = "PST",
+                        value = "PST",
                     ),
                 ],
             ),
