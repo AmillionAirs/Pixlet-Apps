@@ -1,22 +1,35 @@
 load("render.star", "render")
 load("http.star", "http")
 load("encoding/json.star", "json")
+load("time.star", "time")
 load("encoding/base64.star", "base64")
-
-DEFAULT_YEAR = "2022"
+load("schema.star", "schema")
 
 def main(config):
 
-    year = config.get("year", DEFAULT_YEAR)
-    F1_URL = "http://ergast.com/api/f1/" + year + "/next.json"
+    timezone = config.get("timezone") or "America/Chicago"
+    now = time.now().in_location(timezone)
+    Year = now.format("2006")
 
-    
+    F1_URL = "http://ergast.com/api/f1/" + Year + "/next.json"
+
     F1_COUNTRY = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["Circuit"]["Location"]["country"]
-    F1_LOC = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["Circuit"]["Location"]["locality"]
-    #F1_DATE = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["date"]
-    #F1_TIME = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["time"]
-    #F1_TOTAL = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["total"]
-    #F1_ROUND = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["round"]
+    #F1_LOC = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["Circuit"]["Location"]["locality"]
+    F1_DATE = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["date"]
+    F1_TIME = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["time"]
+    F1_ROUND = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["round"]
+
+    EST = str(int(F1_TIME[0:2])-5) + " EST"
+    CST = str(int(F1_TIME[0:2])-6) + " CST"
+    MST = str(int(F1_TIME[0:2])-7) + " MST"
+    PST = str(int(F1_TIME[0:2])-8) + " PST"
+
+    if config.get("local_timezone") == "CST":
+        TZ = CST
+
+    else:
+        TZ = EST
+
 
     #30x24
     #Abu Dhabi = base64.decode("iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAAO1JREFUSEvNllsOxSAIRGX/i/YGEwyOiKgkt/3qQz0wDFYqpdTyh4s+D651FIaIY76/QhkLVGD4fIPfgleQV7gL5sVRUv3uBb4EW4vqOr/KboI9eRmIStxkPoEtedk8evFVCXhc1O0DOGqkSHA7p3ewJ5fVTqvMorIPYDSMSGfV1JM0Am9grB8CT8HaE1pyHSwJVWeL9zdgrDG2YgOvetLqW8nGkhr3c8vlXV0ER9rBc7WebwUiSkwZZ4K9lkoDR5w8GE2kPplo/ShOdq02tvfSwXaHtYuUB2Wf2mm31WV93x4EskBTxp8/7GVn/gMjGOn79JCBIwAAAABJRU5ErkJggg==")
@@ -46,8 +59,6 @@ def main(config):
     #add maps into a dictionary and iterate through it vs the api for what race is next.
     #Display that map and all the necessary information as well
 
-
-
     return render.Root(
         child = render.Column(
             children = [
@@ -65,11 +76,11 @@ def main(config):
                         render.Column(
                             children=[
                                 #Input date here and covert it from Zulu to the local persons time F1_DATE
-                                render.Text("3/20/22", font="5x8"),
+                                render.Text(F1_DATE[5:7] + "/" + F1_DATE[8:10], font="5x8"),
                                 #same here as above convert from zulu time the person local time F1_TIME
-                                render.Text("9:00 AM"),
+                                render.Text(TZ),
                                 #api can easily fill this in use F!_Total and F!_ Round
-                                render.Text("# 1/27"),
+                                render.Text("Race " +  F1_ROUND),
                             ],
                         ),
                     ],
@@ -77,3 +88,27 @@ def main(config):
             ],
         ),
     )
+
+def get_schema():
+    return schema.Schema(
+        version = "1",
+        fields = [
+            schema.Dropdown(
+                id = "local_timezone",
+                name = "Time Zone",
+                desc = "Select your Time Zone",
+                icon = "clock",
+                default = "CST",
+                options = [
+                    schema.Option(
+                        display = "CST",
+                        value = "CST",
+                    ),
+                    schema.Option(
+                        display = "EST",
+                        value = "EST",
+                    ),
+                ],
+            ),
+        ],
+    )       
