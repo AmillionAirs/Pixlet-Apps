@@ -23,10 +23,10 @@ def main(config):
 
 
     #Get timezone selection from config and display after start time on screen
-    EST = str(int(F1_TIME[0:2])-5) + " EST"
-    CST = str(int(F1_TIME[0:2])-6) + " CST"
-    MST = str(int(F1_TIME[0:2])-7) + " MST"
-    PST = str(int(F1_TIME[0:2])-8) + " PST"
+    EST = str(int(F1_TIME[0:2])-4) + " EST"
+    CST = str(int(F1_TIME[0:2])-5) + " CST"
+    MST = str(int(F1_TIME[0:2])-6) + " MST"
+    PST = str(int(F1_TIME[0:2])-7) + " PST"
 
     if config.get("local_timezone") == "CST":
         TZ = CST
