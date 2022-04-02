@@ -29,28 +29,36 @@ def main(config):
     if config.get("local_timezone") == "CST":
         if CST <= 0:
           TZ = str(CST+24) + " CST"
+          DATE = str(int(F1_DATE[8:10]) -1)
         else:
           TZ = str(CST) + " CST"
+          DATE = F1_DATE[8:10]
 
     elif config.get("local_timezone") == "MST":
          if MST <= 0:
           TZ = str(MST+24) + " MST"
+          DATE = str(int(F1_DATE[8:10]) -1)
          else:
           TZ = str(MST) + " MST"
+          DATE = F1_DATE[8:10]
 
 
     elif config.get("local_timezone") == "PST":
         if PST <= 0:
           TZ = str(PST+24) + " PST"
+          DATE = str(int(F1_DATE[8:10]) -1)
         else:
           TZ = str(PST) + " PST"
+          DATE = F1_DATE[8:10]
 
 
     else:
         if EST <= 0:
           TZ = str(EST+24) + " EST"
+          DATE = str(int(F1_DATE[8:10]) -1)
         else:
           TZ = str(EST) + " EST"
+          DATE = F1_DATE[8:10]
 
 
 
@@ -202,7 +210,7 @@ def main(config):
                         render.Image(src=MAP),
                         render.Column(
                             children=[
-                                render.Text(Month + " " + F1_DATE[8:10], font="5x8"),
+                                render.Text(Month + " " + DATE, font="5x8"),
                                 render.Text(TZ),
                                 render.Text("Race " +  F1_ROUND),
                             ],
