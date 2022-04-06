@@ -21,79 +21,89 @@ def main(config):
     F1_TIME = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["time"]
     F1_ROUND = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["round"]
 
+    #Zulu time offsets depending on selected Timezone only have US at the moment
     EST = int(F1_TIME[0:2])-4
     CST = int(F1_TIME[0:2])-5
     MST = int(F1_TIME[0:2])-6
     PST = int(F1_TIME[0:2])-7
 
+    #Made for edge case that race falls on the first of the month in one time zone but the 30/31st in others
+    RACE_DAY_1 = time.time(year = time.now().year, month = int(F1_DATE[5:7]), day = int(F1_DATE[8:10])-1)
+
+    #Establish if a time needs to be added or subtracted from the informationn based on selected time zone
     if config.get("local_timezone") == "CST":
         if CST <= 0:
           TZ = str(CST+24) + " CST"
-          DATE = str(int(F1_DATE[8:10]) -1)
+          DAY = str(RACE_DAY_1)[8:10]
+          ADJ_Month = str(RACE_DAY_1)[5:7]
         else:
           TZ = str(CST) + " CST"
-          DATE = F1_DATE[8:10]
+          DAY = F1_DATE[8:10]
+          ADJ_Month = F1_DATE[5:7]
 
     elif config.get("local_timezone") == "MST":
          if MST <= 0:
           TZ = str(MST+24) + " MST"
-          DATE = str(int(F1_DATE[8:10]) -1)
+          DAY = str(RACE_DAY_1)[8:10]
+          ADJ_Month = str(RACE_DAY_1)[5:7]
          else:
           TZ = str(MST) + " MST"
-          DATE = F1_DATE[8:10]
-
+          DAY = F1_DATE[8:10]
+          ADJ_Month = F1_DATE[5:7]
 
     elif config.get("local_timezone") == "PST":
         if PST <= 0:
           TZ = str(PST+24) + " PST"
-          DATE = str(int(F1_DATE[8:10]) -1)
+          DAY = str(RACE_DAY_1)[8:10]
+          ADJ_Month = str(RACE_DAY_1)[5:7]
         else:
           TZ = str(PST) + " PST"
-          DATE = F1_DATE[8:10]
-
+          DAY = F1_DATE[8:10]
+          ADJ_Month = F1_DATE[5:7]
 
     else:
         if EST <= 0:
           TZ = str(EST+24) + " EST"
-          DATE = str(int(F1_DATE[8:10]) -1)
+          DAY = str(RACE_DAY_1)[8:10]
+          ADJ_Month = str(RACE_DAY_1)[5:7]
         else:
           TZ = str(EST) + " EST"
-          DATE = F1_DATE[8:10]
-
+          DAY = F1_DATE[8:10]
+          ADJ_Month = F1_DATE[5:7]
 
 
     #find the month and display as text
-    if F1_DATE[5:7] == "01":
+    if ADJ_Month == "01":
         Month = "JAN"
 
-    elif F1_DATE[5:7] == "02":
+    elif ADJ_Month == "02":
         Month = "FEB"
 
-    elif F1_DATE[5:7] == "03":
+    elif ADJ_Month == "03":
         Month = "MAR"        
 
-    elif F1_DATE[5:7] == "04":
+    elif ADJ_Month == "04":
         Month = "APR"
 
-    elif F1_DATE[5:7] == "05":
+    elif ADJ_Month == "05":
         Month = "MAY"
 
-    elif F1_DATE[5:7] == "06":
+    elif ADJ_Month == "06":
         Month = "JUN"
 
-    elif F1_DATE[5:7] == "07":
+    elif ADJ_Month == "07":
         Month = "JUL"
 
-    elif F1_DATE[5:7] == "08":
+    elif ADJ_Month == "08":
         Month = "AUG"
 
-    elif F1_DATE[5:7] == "09":
+    elif ADJ_Month == "09":
         Month = "SEP"
 
-    elif F1_DATE[5:7] == "10":
+    elif ADJ_Month == "10":
         Month = "OCT"
 
-    elif F1_DATE[5:7] == "11":
+    elif ADJ_Month == "11":
         Month = "NOV"
 
     else:
@@ -200,7 +210,7 @@ def main(config):
             children = [
                 render.Marquee(
                     width=64,
-                    child=render.Text("Next Race: " + F1_COUNTRY),
+                    child=render.Text("Next Race: " + F1_COUNTRY), 
                     offset_start=5,
                     offset_end=5,
                 ),
@@ -210,7 +220,7 @@ def main(config):
                         render.Image(src=MAP),
                         render.Column(
                             children=[
-                                render.Text(Month + " " + DATE, font="5x8"),
+                                render.Text(Month + " " + DAY, font="5x8"),
                                 render.Text(TZ),
                                 render.Text("Race " +  F1_ROUND),
                             ],
