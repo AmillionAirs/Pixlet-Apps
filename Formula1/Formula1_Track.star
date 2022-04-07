@@ -4,6 +4,7 @@ load("encoding/json.star", "json")
 load("time.star", "time")
 load("encoding/base64.star", "base64")
 load("schema.star", "schema")
+load("cache.star", "cache")
 
 def main(config):
 
@@ -11,7 +12,16 @@ def main(config):
     timezone = config.get("timezone") or "America/Chicago"
     now = time.now().in_location(timezone)
     Year = now.format("2006")
-    
+
+    #Add Caching
+    f1_cached = cache.get("f1_rate")    
+
+    if f1_cached != None:
+        print("Hit! Displaying cached data.")
+        f1_data = json.decode(f1_cached)
+    else:
+        print("Miss! Calling F1 Track data.")
+
     #Set API URLS
     F1_URL = "http://ergast.com/api/f1/" + Year + "/next.json"
 
@@ -21,58 +31,92 @@ def main(config):
     F1_TIME = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["time"]
     F1_ROUND = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["round"]
 
+    f1_data = dict(F1_COUNTRY = F1_COUNTRY, F1_LOC = F1_LOC, F1_DATE = F1_DATE, F1_TIME = F1_TIME, F1_ROUND = F1_ROUND)
+    cache.set("f1_rate", json.encode(f1_data), ttl_seconds = 1600)
 
-    #Get timezone selection from config and display after start time on screen
-    EST = str(int(F1_TIME[0:2])-4) + " EST"
-    CST = str(int(F1_TIME[0:2])-5) + " CST"
-    MST = str(int(F1_TIME[0:2])-6) + " MST"
-    PST = str(int(F1_TIME[0:2])-7) + " PST"
+    #Zulu time offsets depending on selected Timezone only have US at the moment
+    EST = int(F1_TIME[0:2])-4
+    CST = int(F1_TIME[0:2])-5
+    MST = int(F1_TIME[0:2])-6
+    PST = int(F1_TIME[0:2])-7
 
+    #Made for edge case that race falls on the first of the month in one time zone but the 30/31st in others
+    RACE_DAY_1 = time.time(year = time.now().year, month = int(F1_DATE[5:7]), day = int(F1_DATE[8:10])-1)
+
+    #Establish if a time needs to be added or subtracted from the informationn based on selected time zone
     if config.get("local_timezone") == "CST":
-        TZ = CST
+        if CST <= 0:
+          TZ = str(CST+24) + " CST"
+          DAY = str(RACE_DAY_1)[8:10]
+          ADJ_Month = str(RACE_DAY_1)[5:7]
+        else:
+          TZ = str(CST) + " CST"
+          DAY = F1_DATE[8:10]
+          ADJ_Month = F1_DATE[5:7]
 
     elif config.get("local_timezone") == "MST":
-        TZ = MST
+         if MST <= 0:
+          TZ = str(MST+24) + " MST"
+          DAY = str(RACE_DAY_1)[8:10]
+          ADJ_Month = str(RACE_DAY_1)[5:7]
+         else:
+          TZ = str(MST) + " MST"
+          DAY = F1_DATE[8:10]
+          ADJ_Month = F1_DATE[5:7]
 
     elif config.get("local_timezone") == "PST":
-        TZ = PST
+        if PST <= 0:
+          TZ = str(PST+24) + " PST"
+          DAY = str(RACE_DAY_1)[8:10]
+          ADJ_Month = str(RACE_DAY_1)[5:7]
+        else:
+          TZ = str(PST) + " PST"
+          DAY = F1_DATE[8:10]
+          ADJ_Month = F1_DATE[5:7]
 
     else:
-        TZ = EST
+        if EST <= 0:
+          TZ = str(EST+24) + " EST"
+          DAY = str(RACE_DAY_1)[8:10]
+          ADJ_Month = str(RACE_DAY_1)[5:7]
+        else:
+          TZ = str(EST) + " EST"
+          DAY = F1_DATE[8:10]
+          ADJ_Month = F1_DATE[5:7]
 
 
     #find the month and display as text
-    if F1_DATE[5:7] == "01":
+    if ADJ_Month == "01":
         Month = "JAN"
 
-    elif F1_DATE[5:7] == "02":
+    elif ADJ_Month == "02":
         Month = "FEB"
 
-    elif F1_DATE[5:7] == "03":
+    elif ADJ_Month == "03":
         Month = "MAR"        
 
-    elif F1_DATE[5:7] == "04":
+    elif ADJ_Month == "04":
         Month = "APR"
 
-    elif F1_DATE[5:7] == "05":
+    elif ADJ_Month == "05":
         Month = "MAY"
 
-    elif F1_DATE[5:7] == "06":
+    elif ADJ_Month == "06":
         Month = "JUN"
 
-    elif F1_DATE[5:7] == "07":
+    elif ADJ_Month == "07":
         Month = "JUL"
 
-    elif F1_DATE[5:7] == "08":
+    elif ADJ_Month == "08":
         Month = "AUG"
 
-    elif F1_DATE[5:7] == "09":
+    elif ADJ_Month == "09":
         Month = "SEP"
 
-    elif F1_DATE[5:7] == "10":
+    elif ADJ_Month == "10":
         Month = "OCT"
 
-    elif F1_DATE[5:7] == "11":
+    elif ADJ_Month == "11":
         Month = "NOV"
 
     else:
@@ -104,6 +148,8 @@ def main(config):
     Montmeló = base64.decode("iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAARdJREFUSEvtlbEOgjAQhq8xGAcGn47JRcJq9EkcTYhJVx18Ooy6IWmTkvN6xxFChAEnA/T/7v971xoA+MIEP7OA/5X6vKK21kbG8zwfNYwfxxiIQe45BV8fJayqJHoeqqPF0/UeLAGxCF3YtYZLzGlhDWOt9XPcFSV1HITdGvyfug2anHsP1qC0MKkQ/J1WUATWGsu9r54vOB0PUbNRmAR3RkUwlwInROkaPKTV7rGpa9gXhdfhuri83SH5vGGdprDLss7R4uB4v71j3NW0GehIaU2Iq5HGqXUcLgkpIiw25BCR3LMHyBBAn2PtUp5hk2z96EZndZ8G6gPhvsHa7CUhnTxDgdx2zet2GsOZprE41hIa7f1kUTey2b8BM0d25gAAAABJRU5ErkJggg==")
     Austin = base64.decode("iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAATVJREFUSEvllTEOwjAMRdtzcAIWjsMBKrGzIBa2dmRDLCAyMSAOwYbUtRJi5QBcoQKUSEbG+k5TSGGgS6so6fv2t500SZJ78oMn/RuwMcbl9ysRE4w72imYA7Msc1y7Zr9bg5F6X20SkKD2HQwmlVxx20YgwSSkMWKZLvmDEAHoDATbjZvVdnQsD2uKlh/mGeBgTSSlVy0u6Z9NiwTSYe4drUmRCEh7XcSDfm82nuSFXZzn0+H5ct2H+IoiRIKQHQ6MPGgCy0wslqa41fWpqspdiO9Pj6VvPjDqzxAY9BiB+UatH9sCXzyWzc2LRRbTO+2keixBWoHEgsJLQvt5TKh6O6EBoQ2Njz1GE0gWVGiPhohRZ7VW5bHgXjCq6M7BqNJj+tx4LfIe9w39EF/V28l3OHY7PQCcyte14s6trgAAAABJRU5ErkJggg==")
 
+
+    #Tack maps selection
     if F1_LOC == "Abu_Dhabi":
         MAP = Sakhir
     
@@ -179,7 +225,7 @@ def main(config):
             children = [
                 render.Marquee(
                     width=64,
-                    child=render.Text("Next Race: " + F1_COUNTRY),
+                    child=render.Text("Next Race: " + F1_COUNTRY), 
                     offset_start=5,
                     offset_end=5,
                 ),
@@ -189,7 +235,7 @@ def main(config):
                         render.Image(src=MAP),
                         render.Column(
                             children=[
-                                render.Text(Month + " " + F1_DATE[8:10], font="5x8"),
+                                render.Text(Month + " " + DAY, font="5x8"),
                                 render.Text(TZ),
                                 render.Text("Race " +  F1_ROUND),
                             ],

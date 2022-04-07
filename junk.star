@@ -4,6 +4,7 @@ load("encoding/json.star", "json")
 load("time.star", "time")
 load("encoding/base64.star", "base64")
 load("schema.star", "schema")
+load("cache.star", "cache")
 
 def main(config):
 
@@ -11,8 +12,16 @@ def main(config):
     timezone = config.get("timezone") or "America/Chicago"
     now = time.now().in_location(timezone)
     Year = now.format("2006")
-    
-    #Set API URLS
+
+    f1_cached = cache.get("f1_rate")    
+
+    if f1_cached != None:
+        print("Hit! Displaying cached data.")
+        f1_data = json.decode(f1_cached)
+    else:
+        print("Miss! Calling F1 Track data.")
+
+        #Set API URLS
     F1_URL = "http://ergast.com/api/f1/" + Year + "/next.json"
 
     F1_COUNTRY = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["Circuit"]["Location"]["country"]
@@ -20,6 +29,9 @@ def main(config):
     F1_DATE = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["date"]
     F1_TIME = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["time"]
     F1_ROUND = http.get(F1_URL).json()["MRData"]["RaceTable"]["Races"][0]["round"]
+
+    f1_data = dict(F1_COUNTRY = F1_COUNTRY, F1_LOC = F1_LOC, F1_DATE = F1_DATE, F1_TIME = F1_TIME, F1_ROUND = F1_ROUND)
+    cache.set("f1_rate", json.encode(f1_data), ttl_seconds = 1600)
 
     #Zulu time offsets depending on selected Timezone only have US at the moment
     EST = int(F1_TIME[0:2])-4
