@@ -89,40 +89,40 @@ def main(config):
 
     
     if Hour == "1" :
-         Hand = 3
+         Hand = 8
     
     elif Hour == "2" :     
-         Hand = 8
+         Hand = 13
 
     elif Hour == "3" :     
-         Hand = 13        
+         Hand = 18        
 
     elif Hour == "4" :     
-         Hand = 18
-
-    elif Hour == "5" :     
          Hand = 23
 
-    elif Hour == "6" :     
+    elif Hour == "5" :     
          Hand = 28
 
-    elif Hour == "7" :     
+    elif Hour == "6" :     
          Hand = 33
 
-    elif Hour == "8" :     
+    elif Hour == "7" :     
          Hand = 38
 
-    elif Hour == "9" :     
+    elif Hour == "8" :     
          Hand = 43
 
-    elif Hour == "10" :     
+    elif Hour == "9" :     
          Hand = 48
 
+    elif Hour == "10" :     
+         Hand = 53
+
     elif Hour == "11" :     
-         Hand = 53                                                               
+         Hand = 58                                                               
 
     else:
-         Hand = 58
+         Hand = 63
 
     return render.Root(
 
@@ -139,7 +139,7 @@ def main(config):
                         ),
                         render.Row(
                             children=[
-                                render.Box(width=int(Minute) + 3, height=9),
+                                render.Box(width=int(Minute) + 8, height=9),
                                 render.Box(width=1, height=11, color=COLOR_MINUTE),
                             ],
                         ),
