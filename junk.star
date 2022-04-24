@@ -1,3 +1,10 @@
+"""
+Applet: Formula 1
+Summary: Next F1 Race Location
+Description: Shows Time date and location of Next F1 race.
+Author: AmillionAir
+"""
+
 load("render.star", "render")
 load("http.star", "http")
 load("encoding/json.star", "json")
@@ -6,126 +13,19 @@ load("encoding/base64.star", "base64")
 load("schema.star", "schema")
 load("cache.star", "cache")
 
-def main(config):
+DEFAULT_LOCATION = """
+{
+	"lat": "40.6781784",
+	"lng": "-73.9441579",
+	"description": "Brooklyn, NY, USA",
+	"locality": "Brooklyn",
+	"place_id": "ChIJCSF8lBZEwokRhngABHRcdoI",
+	"timezone": "America/New_York"
+}
+"""
 
-    #Time information for date and timezones
-    timezone = config.get("timezone") or "America/Chicago"
-    now = time.now().in_location(timezone)
-    Year = now.format("2006")
-
-    f1_cached = cache.get("f1_rate")    
-
-    if f1_cached != None:
-        print("Hit! Displaying cached data.")
-        f1_data = json.decode(f1_cached)
-    else:
-        print("Miss! Calling F1 Track data.")
-
-        #Set API URLS
-        F1_BASE_URL = "http://ergast.com/api/f1/" + Year + "/next.json"
-        F1_URL = http.get(F1_BASE_URL)
-
-        F1_COUNTRY = F1_URL.json()["MRData"]["RaceTable"]["Races"][0]["Circuit"]["Location"]["country"]
-        F1_LOC = F1_URL.json()["MRData"]["RaceTable"]["Races"][0]["Circuit"]["Location"]["locality"]
-        F1_DATE = F1_URL.json()["MRData"]["RaceTable"]["Races"][0]["date"]
-        F1_TIME = F1_URL.json()["MRData"]["RaceTable"]["Races"][0]["time"]
-        F1_ROUND = F1_URL.json()["MRData"]["RaceTable"]["Races"][0]["round"]
-        F1_CIRCUT_ID = F1_URL.json()["MRData"]["RaceTable"]["Races"][0]["Circuit"]["circuitId"]
-
-        f1_data = dict(F1_COUNTRY = F1_COUNTRY, F1_LOC = F1_LOC, F1_DATE = F1_DATE, F1_TIME = F1_TIME, F1_ROUND = F1_ROUND)
-        cache.set("f1_rate", json.encode(f1_data), ttl_seconds = 1600)
-
-    #Zulu time offsets depending on selected Timezone only have US at the moment
-    EST = int(F1_TIME[0:2])-4
-    CST = int(F1_TIME[0:2])-5
-    MST = int(F1_TIME[0:2])-6
-    PST = int(F1_TIME[0:2])-7
-
-    #Made for edge case that race falls on the first of the month in one time zone but the 30/31st in others
-    RACE_DAY_1 = time.time(year = time.now().year, month = int(F1_DATE[5:7]), day = int(F1_DATE[8:10])-1)
-
-    #Establish if a time needs to be added or subtracted from the informationn based on selected time zone
-    if config.get("local_timezone") == "CST":
-        if CST <= 0:
-          TZ = str(CST+24) + " CST"
-          DAY = str(RACE_DAY_1)[8:10]
-          ADJ_Month = str(RACE_DAY_1)[5:7]
-        else:
-          TZ = str(CST) + " CST"
-          DAY = F1_DATE[8:10]
-          ADJ_Month = F1_DATE[5:7]
-
-    elif config.get("local_timezone") == "MST":
-         if MST <= 0:
-          TZ = str(MST+24) + " MST"
-          DAY = str(RACE_DAY_1)[8:10]
-          ADJ_Month = str(RACE_DAY_1)[5:7]
-         else:
-          TZ = str(MST) + " MST"
-          DAY = F1_DATE[8:10]
-          ADJ_Month = F1_DATE[5:7]
-
-    elif config.get("local_timezone") == "PST":
-        if PST <= 0:
-          TZ = str(PST+24) + " PST"
-          DAY = str(RACE_DAY_1)[8:10]
-          ADJ_Month = str(RACE_DAY_1)[5:7]
-        else:
-          TZ = str(PST) + " PST"
-          DAY = F1_DATE[8:10]
-          ADJ_Month = F1_DATE[5:7]
-
-    else:
-        if EST <= 0:
-          TZ = str(EST+24) + " EST"
-          DAY = str(RACE_DAY_1)[8:10]
-          ADJ_Month = str(RACE_DAY_1)[5:7]
-        else:
-          TZ = str(EST) + " EST"
-          DAY = F1_DATE[8:10]
-          ADJ_Month = F1_DATE[5:7]
-
-
-    #find the month and display as text
-    if ADJ_Month == "01":
-        Month = "JAN"
-
-    elif ADJ_Month == "02":
-        Month = "FEB"
-
-    elif ADJ_Month == "03":
-        Month = "MAR"        
-
-    elif ADJ_Month == "04":
-        Month = "APR"
-
-    elif ADJ_Month == "05":
-        Month = "MAY"
-
-    elif ADJ_Month == "06":
-        Month = "JUN"
-
-    elif ADJ_Month == "07":
-        Month = "JUL"
-
-    elif ADJ_Month == "08":
-        Month = "AUG"
-
-    elif ADJ_Month == "09":
-        Month = "SEP"
-
-    elif ADJ_Month == "10":
-        Month = "OCT"
-
-    elif ADJ_Month == "11":
-        Month = "NOV"
-
-    else:
-        Month = "DEC"
-
-
-    #30x24 track maps
-    F1_MAPS = dict(
+#30x24 track maps
+F1_MAPS = dict(
     yas_marina = base64.decode("iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAAO1JREFUSEvNllsOxSAIRGX/i/YGEwyOiKgkt/3qQz0wDFYqpdTyh4s+D651FIaIY76/QhkLVGD4fIPfgleQV7gL5sVRUv3uBb4EW4vqOr/KboI9eRmIStxkPoEtedk8evFVCXhc1O0DOGqkSHA7p3ewJ5fVTqvMorIPYDSMSGfV1JM0Am9grB8CT8HaE1pyHSwJVWeL9zdgrDG2YgOvetLqW8nGkhr3c8vlXV0ER9rBc7WebwUiSkwZZ4K9lkoDR5w8GE2kPplo/ShOdq02tvfSwXaHtYuUB2Wf2mm31WV93x4EskBTxp8/7GVn/gMjGOn79JCBIwAAAABJRU5ErkJggg=="),
     red_bull_ring = base64.decode("iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAAS9JREFUSEullisOwkAQhrcHQHEEDEFxjRo4A3UIMG0QNMG1CSEIDLKcAQyX4AIk4NA4BAqyIUuWZTqvVjVtZ77557HTyBjzMsKrqqqvRZIkQuvP55EU7EMdUQMXgSGl7pkUzgbXpbcObJ9jwZBgrJ4YlCoDCqZUWuehKm4PgGDfeFxuh8/Lae8USDNQl5U/MNYsGLTfa+fTbFVAdYV8/oC1UKqzoYBZijkBYR1MKg7r6DuDjCml1h+7xlx4Eyh5ZGIqoVHyD20qMPYBEqZdWtNwk5BgrE7QWqKUOhsWmAvvdlqjWb7ZcRYGG0zBpTtaBMbgFrycZPH5cT9y/gzEYB9u78t1Opin60OxyOLrjQclx4mKXJpe359KcTivnGZSjROlXPO+sWINtHGNtVBr9wYhpcwBXE9y4wAAAABJRU5ErkJggg=="),
     albert_park = base64.decode("iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAANVJREFUSEvtlkEOhCAMRetmXMwtORi3nIVuxjBJCWBpf1FjYsYdofSV/7EwEdGXbvgmCRxjrEoJIZxe2g7MUIa147MqqMA9yBXwDLaSW/NeJSqw5WWCWzFoAT8wuptngREJL9kxCk4eIrGW19ljNJl2HnhuWd80vz6ZLeV2g1M2CW71gFapIXAJLyXVVGvPh+t3snzT5ltFXA3kCJhVYlX+4KNqquvLAwbfTqMV9R4V4n3cg6BNhtdrzUZ8+khg9AZDoCkGBveahmaBppALPOqztO428AbVhp8B0Iv3ZQAAAABJRU5ErkJggg=="),
@@ -149,27 +49,68 @@ def main(config):
     marina_Bay = base64.decode("iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAANRJREFUSEvtlkEOxCAMA+G0f+H/X+Exe6KCilUUGRza0F6Wa4UHO0khhhBKeGHFHeBSsJcYK+5cf7BLtWvUMtYe/XLUsmZy8+iULmDUKAy+Ddy6UnSodn4JzBxaYl8GW0Sru9GcSufm5rJCuziDm8AjqBbXdZ3BKbiI3RZh1tFoxOAcdzASlBuY+9mf5xZYNxWKcqm5rI5fBc9GiSWgfzrtWkQ1kBApmlL65Jy/uqa3wPpUowN5XGG/hwCa5UfA1vp5uIVPH3ZJbAN7CTOdLY89Bq3fD83XygEqsyObAAAAAElFTkSuQmCC"),
     catalunya = base64.decode("iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAARdJREFUSEvtlbEOgjAQhq8xGAcGn47JRcJq9EkcTYhJVx18Ooy6IWmTkvN6xxFChAEnA/T/7v971xoA+MIEP7OA/5X6vKK21kbG8zwfNYwfxxiIQe45BV8fJayqJHoeqqPF0/UeLAGxCF3YtYZLzGlhDWOt9XPcFSV1HITdGvyfug2anHsP1qC0MKkQ/J1WUATWGsu9r54vOB0PUbNRmAR3RkUwlwInROkaPKTV7rGpa9gXhdfhuri83SH5vGGdprDLss7R4uB4v71j3NW0GehIaU2Iq5HGqXUcLgkpIiw25BCR3LMHyBBAn2PtUp5hk2z96EZndZ8G6gPhvsHa7CUhnTxDgdx2zet2GsOZprE41hIa7f1kUTey2b8BM0d25gAAAABJRU5ErkJggg=="),
     americas = base64.decode("iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAYAAADtaU2/AAAAAXNSR0IArs4c6QAAATVJREFUSEvllTEOwjAMRdtzcAIWjsMBKrGzIBa2dmRDLCAyMSAOwYbUtRJi5QBcoQKUSEbG+k5TSGGgS6so6fv2t500SZJ78oMn/RuwMcbl9ysRE4w72imYA7Msc1y7Zr9bg5F6X20SkKD2HQwmlVxx20YgwSSkMWKZLvmDEAHoDATbjZvVdnQsD2uKlh/mGeBgTSSlVy0u6Z9NiwTSYe4drUmRCEh7XcSDfm82nuSFXZzn0+H5ct2H+IoiRIKQHQ6MPGgCy0wslqa41fWpqspdiO9Pj6VvPjDqzxAY9BiB+UatH9sCXzyWzc2LRRbTO+2keixBWoHEgsJLQvt5TKh6O6EBoQ2Njz1GE0gWVGiPhohRZ7VW5bHgXjCq6M7BqNJj+tx4LfIe9w39EF/V28l3OHY7PQCcyte14s6trgAAAABJRU5ErkJggg=="),
-    )
+)
+
+def main(config):
+
+    location = config.get("location", DEFAULT_LOCATION)
+    loc = json.decode(location)
+    timezone = loc["timezone"]
+    now = time.now().in_location(timezone)
+    Year = now.format("2006")
+
+
+
+    f1_cached = cache.get("f1_rate")
+
+    if f1_cached != None:
+        print("Hit! Displaying cached data.")
+        f1_data = json.decode(f1_cached)
+    else:
+        print("Miss! Calling F1 Track data.")
+
+        #Set API URLS
+        F1_BASE_URL = "http://ergast.com/api/f1/" + Year + "/next.json"
+        F1_URL = http.get(F1_BASE_URL)
+
+        F1_COUNTRY = F1_URL.json()["MRData"]["RaceTable"]["Races"][0]["Circuit"]["Location"]["country"]
+        F1_LOC = F1_URL.json()["MRData"]["RaceTable"]["Races"][0]["Circuit"]["Location"]["locality"]
+        F1_DATE = F1_URL.json()["MRData"]["RaceTable"]["Races"][0]["date"]
+        F1_TIME = F1_URL.json()["MRData"]["RaceTable"]["Races"][0]["time"]
+        F1_ROUND = F1_URL.json()["MRData"]["RaceTable"]["Races"][0]["round"]
+        F1_CIRCUT_ID = F1_URL.json()["MRData"]["RaceTable"]["Races"][0]["Circuit"]["circuitId"]
+
+        f1_data = dict(F1_COUNTRY = F1_COUNTRY, F1_LOC = F1_LOC, F1_DATE = F1_DATE, F1_TIME = F1_TIME, F1_ROUND = F1_ROUND, F1_CIRCUT_ID = F1_CIRCUT_ID)
+        cache.set("f1_rate", json.encode(f1_data), ttl_seconds = 1600)
+
+
+    #code from @whyamihere to automatically adjust the date time sting from the API
+    date_and_time = f1_data["F1_DATE"]+"T"+f1_data["F1_TIME"]
+
+    #date_and_time2 = time.parse_time(date_and_time,"2006-01-02T15:04:05Z","UTC") #have this merely to show the difference
+    date_and_time3 = time.parse_time(date_and_time,"2006-01-02T15:04:05Z","UTC").in_location(timezone)
+    date_str = date_and_time3.format("Jan 02").upper() #current format of your current date str
+    time_str = date_and_time3.format("15:04") #outputs military time but can change 15 to 3 to not do that. The Only thing missing from your current string though is the time zone, but if they're doing local time that's pretty irrelevant
 
 
     return render.Root(
         child = render.Column(
             children = [
                 render.Marquee(
-                    width=64,
-                    child=render.Text("Next Race: " + F1_COUNTRY), 
-                    offset_start=5,
-                    offset_end=5,
+                    width = 64,
+                    child = render.Text("Next Race: " + f1_data["F1_COUNTRY"]),
+                    offset_start = 5,
+                    offset_end = 5,
                 ),
-                render.Box(width=64, height=1, color="#a0a"),
+                render.Box(width = 64, height = 1, color = "#a0a"),
                 render.Row(
                     children = [
-                        render.Image(src = F1_MAPS.get(F1_CIRCUT_ID, 'americas')),
+                        render.Image(src = F1_MAPS.get(f1_data["F1_CIRCUT_ID"], "americas")),
                         render.Column(
-                            children=[
-                                render.Text(Month + " " + DAY, font="5x8"),
-                                render.Text(TZ),
-                                render.Text("Race " +  F1_ROUND),
+                            children = [
+                                render.Text(date_str, font = "5x8"),
+                                render.Text(time_str),
+                                render.Text("Race " + f1_data["F1_ROUND"]),
                             ],
                         ),
                     ],
@@ -182,30 +123,11 @@ def get_schema():
     return schema.Schema(
         version = "1",
         fields = [
-            schema.Dropdown(
-                id = "local_timezone",
-                name = "Time Zone",
-                desc = "Select your Time Zone",
-                icon = "clock",
-                default = "CST",
-                options = [
-                    schema.Option(
-                        display = "EST",
-                        value = "EST",
-                    ),
-                    schema.Option(
-                        display = "CST",
-                        value = "CST",
-                    ),
-                        schema.Option(
-                        display = "MST",
-                        value = "MST",
-                    ),
-                        schema.Option(
-                        display = "PST",
-                        value = "PST",
-                    ),
-                ],
-            ),
+            schema.Location(
+                id = "location",
+                name = "Location",
+                desc = "Location for which to display time.",
+                icon = "place",
+            ),          
         ],
-    )       
+    )
