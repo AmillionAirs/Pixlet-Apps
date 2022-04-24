@@ -52,7 +52,8 @@ F1_MAPS = dict(
 )
 
 def main(config):
-
+    
+    #TIme and date Information
     location = config.get("location", DEFAULT_LOCATION)
     loc = json.decode(location)
     timezone = loc["timezone"]
@@ -60,7 +61,7 @@ def main(config):
     Year = now.format("2006")
 
 
-
+    #Cache Data
     f1_cached = cache.get("f1_rate")
 
     if f1_cached != None:
@@ -87,7 +88,6 @@ def main(config):
     #code from @whyamihere to automatically adjust the date time sting from the API
     date_and_time = f1_data["F1_DATE"]+"T"+f1_data["F1_TIME"]
 
-    #date_and_time2 = time.parse_time(date_and_time,"2006-01-02T15:04:05Z","UTC") #have this merely to show the difference
     date_and_time3 = time.parse_time(date_and_time,"2006-01-02T15:04:05Z","UTC").in_location(timezone)
     date_str = date_and_time3.format("Jan 02").upper() #current format of your current date str
     time_str = date_and_time3.format("15:04") #outputs military time but can change 15 to 3 to not do that. The Only thing missing from your current string though is the time zone, but if they're doing local time that's pretty irrelevant
