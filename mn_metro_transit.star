@@ -9,15 +9,39 @@ load("render.star", "render")
 load("http.star", "http")
 load("encoding/json.star", "json")
 load("schema.star", "schema")
+load("cache.star", "cache")
 
 #Assign Default Stop Code
 DEFAULT_STOP_CODE = "15264"
 
 def main(config):
+
     #Establish API URL
     stop_code = config.get("stop_code", DEFAULT_STOP_CODE)
     url = "https://svc.metrotransit.org/NexTripv2/" + stop_code + "?format=json"
     MTT = http.get(url).json()
+
+    #Cache Data
+    MTT_cached = cache.get("MTT_rate")
+
+    if MTT_cached != None:
+        print("Hit! Displaying cached data.")
+        MTT_data = json.decode(MTT_cached)
+    else:
+        print("Miss! Calling Transit data.")
+
+    MTT_TITLE = MTT
+    MTT_DEPARTURE_LEN = MTT["departures"]
+    MTT_DESCRIPTION0 = MTT["stops"][0]["description"]
+    MTT_ROUTE_SHORT_NAME0 = MTT["departures"][0]["route_short_name"]
+    MTT_ROUTE_SHORT_NAME1 = MTT["departures"][1]["route_short_name"]
+    MTT_DIRECTION0 = MTT["departures"][0]["direction_text"]
+    MTT_DIRECTION1 = MTT["departures"][1]["direction_text"]
+    MTT_DEPARTURE0 = MTT["departures"][0]["departure_text"]
+    MTT_DEPARTURE1 = MTT["departures"][1]["departure_text"]
+
+    MTT_data = dict(MTT_DESCRIPTION0 = MTT_DESCRIPTION0, MTT_ROUTE_SHORT_NAME0 = MTT_ROUTE_SHORT_NAME0, MTT_ROUTE_SHORT_NAME1 = MTT_ROUTE_SHORT_NAME1, MTT_DIRECTION0 = MTT_DIRECTION0, MTT_DIRECTION1 = MTT_DIRECTION1, MTT_DEPARTURE0 = MTT_DEPARTURE0, MTT_DEPARTURE1 = MTT_DEPARTURE1, MTT_DEPARTURE_LEN = MTT_DEPARTURE_LEN, MTT_TITLE = MTT_TITLE)
+    cache.set("MTT_rate", json.encode(MTT_data), ttl_seconds = 3600)
 
     CB = "#333"
     CB2 = "#333"
@@ -25,7 +49,7 @@ def main(config):
     CT2 = "#fa0"
 
     #invalid stop code page
-    if "title" in MTT:
+    if "400" in MTT_TITLE:
         stopDesc = "Invalid Stop Number"
         route1 = "Error"
         route2 = "Error"
@@ -39,8 +63,8 @@ def main(config):
         depText2 = "Stop#"
 
         #no transit page
-    elif len(MTT["departures"]) == 0:
-        stopDesc = MTT["stops"][0]["description"]
+    elif len(MTT_DEPARTURE_LEN) == 0:
+        stopDesc = MTT_DESCRIPTION0
         route1 = "  No"
         route2 = "  No"
         r1Desc = "   departures"
@@ -53,13 +77,13 @@ def main(config):
         depText2 = ""
 
         #only 1 more departure
-    elif len(MTT["departures"]) == 1:
-        stopDesc = MTT["stops"][0]["description"]
-        route1 = MTT["departures"][0]["route_short_name"]
+    elif len(MTT_DEPARTURE_LEN) == 1:
+        stopDesc = MTT_DESCRIPTION0
+        route1 = MTT_ROUTE_SHORT_NAME0
         route2 = " No"
-        r1Desc = MTT["departures"][0]["direction_text"]
+        r1Desc = MTT_DIRECTION0
         r2Desc = "   departures "
-        depText1 = MTT["departures"][0]["departure_text"]
+        depText1 = MTT_DEPARTURE0
         depText2 = ""
         CB = "#333"
         CB2 = "#222"
@@ -70,13 +94,13 @@ def main(config):
     else:
         #departure slot 1
         #Find color and destination of first and second train and use that for rendering square color and 3 letter destination code
-        stopDesc = MTT["stops"][0]["description"]
-        route1 = MTT["departures"][0]["route_short_name"]
-        route2 = MTT["departures"][1]["route_short_name"]
-        r1Desc = MTT["departures"][0]["direction_text"]
-        r2Desc = MTT["departures"][1]["direction_text"]
-        depText1 = MTT["departures"][0]["departure_text"]
-        depText2 = MTT["departures"][1]["departure_text"]
+        stopDesc = MTT_DESCRIPTION0
+        route1 = MTT_ROUTE_SHORT_NAME0
+        route2 = MTT_ROUTE_SHORT_NAME1
+        r1Desc = MTT_DIRECTION0
+        r2Desc = MTT_DIRECTION1
+        depText1 = MTT_DEPARTURE0
+        depText2 = MTT_DEPARTURE1
 
     if r1Desc == "NB":
         r1Desc = "North"
